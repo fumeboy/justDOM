@@ -1,0 +1,7 @@
+/node_modules
+/example_dist
+/test
+
+/.travis.yml
+
+/.idea
