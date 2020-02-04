@@ -1,5 +1,4 @@
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const SimpleWebpackHTMLEntrypoint = require('simple-webpack-html-entrypoint')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
@@ -8,7 +7,7 @@ module.exports = {
     devtool: 'inline-source-map',
     devServer: {
         open: true,
-        contentBase: path.join(__dirname, 'example','dist'), // boolean | string | array, static file location
+        contentBase: path.join(__dirname, 'build','dist'), // boolean | string | array, static file location
         compress: true, // enable gzip compression
         historyApiFallback: true, // true for index.html upon 404, object for multiple paths
         hot: true, // hot module replacement. Depends on HotModuleReplacementPlugin
@@ -16,36 +15,14 @@ module.exports = {
         noInfo: true // only errors & warns on hot reload
     },
     entry: {
-        index: './example/index.ts',
+        index: './src/example/index.ts',
     },
     output: {
-        path: path.join(__dirname, 'example', 'dist'),
+        path: path.join(__dirname, 'build', 'dist'),
         filename: '[name].js'
     },
     module: {
         rules: [
-            {
-                test: /\.sass$/,
-                use: [
-                    // ifProduction() ? MiniCssExtractPlugin.loader : 'style-loader',
-                    MiniCssExtractPlugin.loader,
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            importLoaders: 1,
-                            modules: true,
-                            localIdentName: '[name]__[local]___[hash:base64:5]'
-                        }
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            modules: true,
-                            localIdentName: '[name]_[local]_[hash:base64:5]'
-                        }
-                    }
-                ]
-            },
             {
                 test: /\.ts$/,
                 exclude: /node_modules/,
@@ -60,6 +37,12 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
+            chunks: 'all',
+            minSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            name: true,
             cacheGroups: {
                 default: {
                     name: 'common',
@@ -67,23 +50,25 @@ module.exports = {
                     minSize: 0,
                     minChunks: 2 //模块被引用2次以上的才抽离
                 },
-                vdom: {
-                    name: 'vdom',
-                    test: /[\\/]src[\\/]dom[\\/]/,
-                    chunks: 'all',
-                    priority: 2
-                }
+                vendors: {
+                    name: 'vendors',
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: 1,
+                },
+
             }
         }
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
+        alias: {
+            '@c': path.resolve(__dirname, './src/components'),
+            '@d': path.resolve(__dirname, './src/def'),
+            '@s': path.resolve(__dirname, './src/shortcut'),
+            '@src': path.resolve(__dirname, './src'),
+        }
     },
     plugins: [
-        new MiniCssExtractPlugin({
-            filename: '[name].css',
-            chunkFilename: '[id].css'
-        }),
         new BundleAnalyzerPlugin({
             openAnalyzer: false,
             analyzerMode: 'static',

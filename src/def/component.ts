@@ -3,11 +3,17 @@ import { Components } from './vfor'
 
 export class Component{
     elem: Element
-    with(s:Status, fn: StatusCallback, run?: boolean){
+    with(s:Status, fn: StatusCallback, run: boolean = true){
         s.with(fn, this)
         if(run){
             // with 挂上时，执行一次
-            s.must_update(v=>v)
+            fn(s.get(), this)
+        }
+        return this
+    }
+    a(attr:object){
+        for(let x in attr){
+            this.elem.setAttribute(x, attr[x])
         }
         return this
     }

@@ -37,6 +37,7 @@ export class Status {
 
 export class Statuses<T> {
     private data
+
     private children_ = <{ [k in keyof T]: Status }>{}
     set() {
         let o = this.data
@@ -44,6 +45,9 @@ export class Statuses<T> {
             let s = this.children_[k]
             if (s) s.set(o[k])
         }
+    }
+    get(){
+        return this.data
     }
     children(){
         return this.children_

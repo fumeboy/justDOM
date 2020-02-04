@@ -4,12 +4,20 @@
         "target": "es6", //目标代码类型
         "noImplicitAny": false, //在表达式和声明上有隐含的'any'类型时报错。
         "sourceMap": false, //用于debug
-        "rootDir": ".",
+        "rootDir": "./src",
         "outDir": "./build", //重定向输出目录。
         "esModuleInterop": true,
         "declaration": true,
         "typeRoots" : ["./typings"],
         "allowJs": false,
+        "baseUrl": "./src",
+        "paths": {
+            "@c/*": ["./components/*"],
+            "@d/*": ["./def/*"],
+            "@s/*": ["./shortcut/*"],
+            "@src/*": ["./*"]
+        },
+        "moduleResolution": "node",
         "watch": false //在监视模式下运行编译器。会监视输出文件，在它们改变时重新编译。
     }
 }

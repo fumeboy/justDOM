@@ -1,34 +1,11 @@
-import { Status, Statuses } from '../../def/status'
-import { Component } from '../../def/component'
-import { vfor } from '../../def/vfor'
+import { Status, Statuses } from '@d/status'
+import { Component } from '@d/component'
+import { vfor } from '@d/vfor'
+import {reactive_text} from '@s/reactive_text'
 
 type itemT = {
     text: string
     done: boolean
-}
-
-const todoitem = (data: Statuses<itemT>) => {
-    let { done, text } = data.children()
-    return new Component('li').c(
-        new Component('span').with(
-            text,
-            (v, c) => {
-                c.elem.innerText = v
-            },
-            true
-        ),
-        new Component('button')
-            .on('click', () => {
-                done.set((v) => !v)
-            })
-            .with(
-                done,
-                (v, c) => {
-                    c.elem.innerText = '[have done? ' + v + ']'
-                },
-                true
-            )
-    )
 }
 
 let todoList = [
@@ -37,6 +14,20 @@ let todoList = [
         { text: 'item c', done: false }
     ],
     array = new Status(todoList)
+
+const todoitem = (data: Statuses<itemT>) => {
+    let { done, text } = data.children()
+    return new Component('li').c(
+        new Component('span').c(reactive_text(text)),
+        new Component('button').c(reactive_text(done, (v) => '[have done? ' + v + ']')).on('click', () => {
+            done.set((v) => !v)
+        }),
+        new Component('button').c('delete').on('click', () => {
+            todoList.splice(todoList.indexOf(data.get()), 1)
+            array.must_update(todoList)
+        })
+    )
+}
 
 export const todolist = () => {
     let filter = (filter: number, list) => {
@@ -52,9 +43,9 @@ export const todolist = () => {
     }
     let title = new Component('h1').c('TODO list')
     let tabs = new Component().c(
-        new Component('button').c('all').on('click', () => array.set(filter(0,todoList))),
+        new Component('button').c('all').on('click', () => array.set(filter(0, todoList))),
         new Component('button').c('finished').on('click', () => array.set(filter(1, todoList))),
-        new Component('button').c('todo').on('click', () => array.set(filter(2,todoList)))
+        new Component('button').c('todo').on('click', () => array.set(filter(2, todoList)))
     )
     let input = new Component('input')
     let list = new vfor(todoList, todoitem).with(array, (v, c: vfor<itemT>) => {

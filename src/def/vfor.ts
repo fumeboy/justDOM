@@ -59,7 +59,7 @@ export class vfor<T> extends Components {
             let key = data.__key__
             if(key){
                 item = this.cache[key]
-                item.status.set(data)
+                item.status.set()
             }else{
                 key = this.key_fn(data)
                 let status = new Statuses<T>(data)
