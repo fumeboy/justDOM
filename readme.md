@@ -45,7 +45,6 @@ const counter = () => {
                 count.set((v) => v + 1)
             })
 }
-// with 方法，将事件作为 callback悬挂在 status 上，当 status 发生 set，会执行所有的 callback
 ```
 
 在 node 环境下，使用 npm run example 体验示例
