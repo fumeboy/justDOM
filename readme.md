@@ -2,17 +2,18 @@
 
 justDOM 项目展示了如何在不使用 vdom 的情况下，获取与现代流行前端框架类似的编程体验。
 
-为什么我对 vdom 有特别的看法呢？请看下面这个流程：
+为什么我对 vdom 有特别的看法呢？ 请看下面这个流程：
 
 1. 程序员需要更新 DOM 节点树的一部分，并且“明确地”知道具体需要如何更新。（需求明确）
 
 2. 但是他并不直接去做这件事，而是产生 vdom 节点树，通过对比新旧 vdom 节点树来寻找需要更新的部分。这个时候，diff 程序在猜测程序员的想法。（这是需求丢失再捕获） 
 
-这里我有两个问题： 
+由此我有两个问题： 
 
 1. 我们能够确定 diff 程序执行的更新一定是我们想要的更新吗？
 
 2. 程序员既然已经知道了要更新何处，为什么还要绕一个弯子，体验需求丢失再捕获呢
+
 
 ## 项目说明
 
@@ -39,12 +40,10 @@ count.with(v=>console.log(v))
 const counter = () => {
     let count = new Status(0)
     return new Component('button')
-        .on('click', () => {
-            count.set((v) => v + 1)
-        })
-        .with(count, (v,c) => {
-            c.elem.innerHTML = 'count is ' + v
-        },true)
+            .c(reactive_text(count, (v) => 'count is ' + v))
+            .on('click', () => {
+                count.set((v) => v + 1)
+            })
 }
 // with 方法，将事件作为 callback悬挂在 status 上，当 status 发生 set，会执行所有的 callback
 ```
