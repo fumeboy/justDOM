@@ -12,9 +12,9 @@
         "allowJs": false,
         "baseUrl": "./src",
         "paths": {
-            "@c/*": ["./components/*"],
-            "@d/*": ["./def/*"],
-            "@s/*": ["./shortcut/*"],
+            "@c/*": ["./src/components/*"],
+            "@d/*": ["./src/def/*"],
+            "@s/*": ["./src/shortcut/*"],
             "@src/*": ["./*"]
         },
         "moduleResolution": "node",
